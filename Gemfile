@@ -5,3 +5,4 @@ source "https://rubygems.org"
 # gem "rails"
 
 gem "rspec", "~> 3.11"
+gem "dotenv", "~> 2.8"
