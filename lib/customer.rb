@@ -1,11 +1,13 @@
 require_relative './menu.rb'
-$client = Twilio::REST::Client.new ENV['ACCOUNT_SID'], ENV['AUTH_TOKEN']
+require_relative './texter.rb'
 
 class Customer
   def initialize(number)
    @number = number
    @selected = []
   end
+
+  attr_reader :selected
 
   def select(*dishes)
     dishes.each do |dish|
@@ -19,20 +21,9 @@ class Customer
     end
   end
 
-  def order(order_time = Time.now)
-    text(@number, get_prerp_time(order_time))
-  end
-
-  def get_prerp_time(order_time)
-    longest = @selected.max_by {|dish| dish.prep_time}.prep_time
-    (order_time + longest * 60).strftime('%H:%M')
-  end
-
-  def text(number, time)
-    $client.messages.create(
-      from: '+18146374780',
-      to: @number,
-      body: "Thank you! Your order was placed and will be delivered before #{time}"
-    )
+  def order(order_time = Time.now, texter = Texter.new)
+    time = Menu.new.get_prep_time(@selected, order_time)
+    message = "Thank you! Your order was placed and will be delivered before #{time}"
+    texter.send_sms(body: message, to: @number)
   end
 end

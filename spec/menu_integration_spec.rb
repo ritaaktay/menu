@@ -23,4 +23,13 @@ RSpec.describe Menu do
     expect(io).to receive(:puts).with("TOTAL £39.50")
     menu.receipt([dish_1, dish_2])
   end
+
+  it "calculates prep time for array of dishes" do
+    io = double(:io)
+    menu = Menu.new(io)
+    dish_1 =Dish.new("Pecan Pie", 23, 20)
+    dish_2 = Dish.new("Banana Bread", 16.5, 20)
+    time = Time.new(2022,8,23,16,0,0,"+00:00")
+    expect(menu.get_prep_time([dish_1, dish_2],time)).to eq "16:20"
+  end
 end

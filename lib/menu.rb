@@ -3,7 +3,7 @@ require 'twilio-ruby'
 require 'dotenv/load'
 
 class Menu
-  def initialize(io)
+  def initialize(io = Kernel)
     @io = io
     @dishes = []
   end
@@ -24,6 +24,11 @@ class Menu
     display(dishes)
     total = dishes.sum {|dish| dish.price}
     @io.puts "TOTAL £%.2f" % total
+  end
+
+  def get_prep_time(dishes, order_time)
+    longest = dishes.max_by {|dish| dish.prep_time}.prep_time
+    (order_time + longest * 60).strftime('%H:%M')
   end
 end
 
