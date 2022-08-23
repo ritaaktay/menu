@@ -26,7 +26,8 @@ RSpec.describe "Customer Integration" do
     customer = Customer.new(ENV["PHONE_NUM"])
     customer.select(dish_1, dish_2)
     time = Time.new(2022,8,22,18,0,0, "+00:00")
-    expect(customer.order(time).body).to eq "Sent from your Twilio trial account - Thank you! Your order was placed and will be delivered before 18:20"
-    expect(customer.order(time).to).to eq ENV["PHONE_NUM"]
+    texter = double :texter
+    expect(texter).to receive(:send_sms).with(hash_including(:body, :to))
+    customer.order(time, texter)
   end
 end

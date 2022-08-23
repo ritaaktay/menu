@@ -7,10 +7,11 @@ class Texter
   end
 
   def send_sms(body:,to:)
-      @client.messages.create(
-        from: '+18146374780',
-        to: to,
-        body: body
-      )
+    fail "no client" if @client == nil
+    @client.messages.create(
+      from: '+18146374780',
+      to: to,
+      body: body
+    )
   end
 end
